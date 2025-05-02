@@ -36,6 +36,6 @@
     }
   },
   "files": {
-    "include": ["src", "test"]
+    "include": ["src"]
   }
 }
