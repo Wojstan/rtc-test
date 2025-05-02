@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, type Mock } from 'vitest'
+import { type Mock, describe, expect, it, vi } from 'vitest'
 import { fetchSimulationState } from '../stateClient'
 
 describe('stateClient', () => {
