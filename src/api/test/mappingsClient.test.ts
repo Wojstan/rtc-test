@@ -20,7 +20,7 @@ describe('mappingsClient', () => {
     ;(fetch as unknown as Mock).mockResolvedValue(mockResponse)
 
     await expect(fetchEventMappings()).rejects.toThrow(
-      'Failed to fetch state: Internal Server Error',
+      'Failed to fetch mappings: Internal Server Error',
     )
   })
 })
