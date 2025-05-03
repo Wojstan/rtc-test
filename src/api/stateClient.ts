@@ -1,9 +1,11 @@
-interface MatchSimulation {
+import { API_URL } from './constants'
+
+interface EventSimulation {
   odds: string
 }
 
-export async function fetchSimulationState(): Promise<MatchSimulation> {
-  const res = await fetch('http://localhost:3000/api/state')
+export async function fetchSimulationState(): Promise<EventSimulation> {
+  const res = await fetch(`${API_URL}/api/state`)
 
   if (!res.ok) throw new Error(`Failed to fetch state: ${res.statusText}`)
 
