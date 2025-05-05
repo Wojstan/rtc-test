@@ -1,8 +1,10 @@
 import { fetchEventMappings } from '../api/mappingsClient'
 import { fetchSimulationState } from '../api/stateClient'
 import { decodeOdds } from '../lib/decodeOdds'
+import { logChanges } from '../lib/logChanges'
 import {
   type SportEvent,
+  getEvent,
   markAsRemoved,
   updateEvent,
 } from '../store/eventStore'
@@ -23,8 +25,10 @@ export async function simulateEvents(): Promise<void> {
 
 function processEvent(event: SportEvent, newIds: Set<string>): void {
   const { id } = event
-
   newIds.add(id)
+
+  const prevEvent = getEvent(id)
+  prevEvent && logChanges(prevEvent, event)
 
   updateEvent(id, event)
 }
