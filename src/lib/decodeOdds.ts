@@ -38,7 +38,8 @@ function buildSportEvent(fields: string[], mappings: Mappings): SportEvent {
     statusId,
     scoreRaw,
   ] = fields
-  const scores = decodeScores(scoreRaw, mappings)
+
+  const scores = scoreRaw ? decodeScores(scoreRaw, mappings) : {}
 
   return {
     id,
@@ -70,7 +71,6 @@ function decodeScores(
 
   for (const part of scoreParts) {
     const [periodId, result] = part.split('@')
-
     const [home, away] = result.split(':')
     scores[mappings[periodId]] = {
       type: mappings[periodId],

@@ -47,6 +47,15 @@ describe('decodeOdds', () => {
     })
   })
 
+  it('handles empty score string', () => {
+    const odds =
+      'id,b8a804c5-7a18-4ce6-a242-34c94428160f,a109f2fc-65ce-4989-aaf3-b05e7cd642b9,1746442870235,e16d4bb3-f5b4-478a-940b-85ab415d9e1b,5795395d-61d2-4b5a-9239-82b759ad07a7,a012ded9-c160-46eb-b5c1-8c57c69417ba,'
+    const result = decodeOdds(odds, testMappings.mappings)
+
+    const firstEvent = result.id
+    expect(firstEvent.scores).toEqual({})
+  })
+
   it('parses startTime as ISO string', () => {
     const odds =
       'id,b8a804c5-7a18-4ce6-a242-34c94428160f,a109f2fc-65ce-4989-aaf3-b05e7cd642b9,1746442870000,home,away,status,period@1:0'
