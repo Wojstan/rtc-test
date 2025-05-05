@@ -1,23 +1,5 @@
+import type { Score, SportEvent } from '../store/eventStore'
 import { type Mappings, parseMappings } from './parseMappings'
-
-interface Score {
-  type: string
-  home: string
-  away: string
-}
-
-interface SportEvent {
-  id: string
-  status: string
-  scores: Record<string, Score>
-  startTime: string
-  sport: string
-  competitors: {
-    HOME: { type: 'HOME' | 'AWAY'; name: string }
-    AWAY: { type: 'HOME' | 'AWAY'; name: string }
-  }
-  competition: string
-}
 
 export function decodeOdds(
   oddsRaw: string,
