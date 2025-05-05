@@ -18,9 +18,7 @@ export async function simulateEvents(): Promise<void> {
 
   for (const event of Object.values(newEvents)) processEvent(event, newIds)
 
-  const removedIds = [...lastSeenIds].filter((id) => !newIds.has(id))
-  markAsRemoved(removedIds)
-  lastSeenIds = newIds
+  processRemovedEvents(newIds)
 }
 
 function processEvent(event: SportEvent, newIds: Set<string>): void {
@@ -29,4 +27,10 @@ function processEvent(event: SportEvent, newIds: Set<string>): void {
   newIds.add(id)
 
   updateEvent(id, event)
+}
+
+function processRemovedEvents(newIds: Set<string>) {
+  const removedIds = [...lastSeenIds].filter((id) => !newIds.has(id))
+  markAsRemoved(removedIds)
+  lastSeenIds = newIds
 }
