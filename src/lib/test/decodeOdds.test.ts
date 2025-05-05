@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { decodeOdds } from '../decodeOdds'
-import { result, testMappings, testOdds } from './mockData'
+import { result, testMappings, testOdds } from './__mockDecodeData__'
 
 describe('decodeOdds', () => {
   it('decodes odds string into an event', () => {

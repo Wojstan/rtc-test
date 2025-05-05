@@ -1,4 +1,4 @@
-import type { Score, SportEvent } from '../store/eventStore'
+import type { Score, SportEvent, Status } from '../store/eventStore'
 import { type Mappings, parseMappings } from './parseMappings'
 
 export function decodeOdds(
@@ -45,7 +45,7 @@ function buildSportEvent(fields: string[], mappings: Mappings): SportEvent {
     sport: mappings[sportId],
     competition: mappings[competitionId],
     startTime: new Date(Number(startTimeMs)).toISOString(),
-    status: mappings[statusId],
+    status: mappings[statusId] as Status,
     competitors: {
       HOME: {
         type: 'HOME',
