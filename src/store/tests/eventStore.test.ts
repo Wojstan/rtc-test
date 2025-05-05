@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   type SportEvent,
+  getEvent,
   getEvents,
   markAsRemoved,
   updateEvent,
@@ -74,5 +75,26 @@ describe('eventStore', () => {
     const events = getEvents()
 
     expect(events[event.id]).toEqual(event)
+  })
+
+  it('gets signle event', () => {
+    const event: SportEvent = {
+      id: 'event1',
+      status: 'LIVE',
+      scores: {},
+      startTime: new Date().toISOString(),
+      sport: 'FOOTBALL',
+      competition: 'UEFA',
+      competitors: {
+        HOME: { type: 'HOME', name: 'Team A' },
+        AWAY: { type: 'AWAY', name: 'Team B' },
+      },
+    }
+
+    updateEvent(event.id, event)
+    updateEvent(event.id, event)
+
+    expect(getEvent(event.id)).toEqual(event)
+    expect(getEvent('wrong-id')).toBeNull()
   })
 })

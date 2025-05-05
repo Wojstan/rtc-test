@@ -1,4 +1,4 @@
-type Status = 'LIVE' | 'REMOVED'
+export type Status = 'LIVE' | 'REMOVED'
 
 export interface Score {
   type: string
@@ -25,6 +25,10 @@ export function getEvents(): { [k: string]: SportEvent } {
   return Object.fromEntries(
     [...events.entries()].filter(([_, event]) => event.status !== 'REMOVED'),
   )
+}
+
+export function getEvent(id: string): SportEvent | null {
+  return events.get(id) || null
 }
 
 export function updateEvent(id: string, updated: SportEvent): void {
