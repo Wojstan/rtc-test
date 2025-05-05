@@ -20,7 +20,10 @@ describe('simulateEvents', () => {
   })
 
   it('processes new events', async () => {
+    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
     const eventId = '4feb31b5-88ee-4c59-96aa-e8bbec7a366b'
+
+    // FIRST CYCLE
     ;(fetchSimulationState as Mock).mockResolvedValue({
       odds: testOdd,
     })
@@ -38,12 +41,13 @@ describe('simulateEvents', () => {
         type: 'CURRENT',
       },
     })
+    expect(events[eventId].status).toEqual('PRE')
+
+    // SECOND CYCLE
     ;(fetchSimulationState as Mock).mockResolvedValue({
       odds: updatedTestOdd,
     })
-
     await simulateEvents()
-
     events = getEvents()
 
     expect(events[eventId].scores).toStrictEqual({
@@ -63,12 +67,25 @@ describe('simulateEvents', () => {
         type: 'PERIOD_2',
       },
     })
+    expect(events[eventId].status).toEqual('LIVE')
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'Score changed for 4feb31b5-88ee-4c59-96aa-e8bbec7a366b [CURRENT]: 6:5 → 7:5',
+    )
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'New score period "PERIOD_1" added for 4feb31b5-88ee-4c59-96aa-e8bbec7a366b: 6:5',
+    )
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'New score period "PERIOD_2" added for 4feb31b5-88ee-4c59-96aa-e8bbec7a366b: 6:5',
+    )
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'Status changed for 4feb31b5-88ee-4c59-96aa-e8bbec7a366b: PRE → LIVE',
+    )
+
+    // THIRD CYCLE
     ;(fetchSimulationState as Mock).mockResolvedValue({
       odds: newTestOdd,
     })
-
     await simulateEvents()
-
     events = getEvents()
 
     expect(events[eventId]).toBeUndefined()

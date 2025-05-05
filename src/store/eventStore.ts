@@ -1,4 +1,4 @@
-export type Status = 'LIVE' | 'REMOVED'
+export type Status = 'LIVE' | 'REMOVED' | 'PRE'
 
 export interface Score {
   type: string
