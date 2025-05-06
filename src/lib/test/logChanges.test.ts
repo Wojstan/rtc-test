@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { SportEvent } from '../../store/eventStore'
-import { logChanges } from '../logChanges'
+import { logLiveChanges, logRemovedStatusChange } from '../logChanges'
 
 const baseEvent: SportEvent = {
   id: 'test-id',
@@ -36,7 +36,7 @@ describe('logChanges', () => {
       },
     }
 
-    logChanges(baseEvent, updated)
+    logLiveChanges(baseEvent, updated)
 
     expect(consoleSpy).toHaveBeenCalledWith(
       'Score changed for test-id [CURRENT]: 1:0 → 2:1',
@@ -52,7 +52,7 @@ describe('logChanges', () => {
       },
     }
 
-    logChanges(baseEvent, updated)
+    logLiveChanges(baseEvent, updated)
 
     expect(consoleSpy).toHaveBeenCalledWith(
       'New score period "PERIOD_1" added for test-id: 1:0',
@@ -65,7 +65,7 @@ describe('logChanges', () => {
       status: 'REMOVED',
     }
 
-    logChanges(baseEvent, updated)
+    logLiveChanges(baseEvent, updated)
 
     expect(consoleSpy).toHaveBeenCalledWith(
       'Status changed for test-id: LIVE → REMOVED',
@@ -81,7 +81,7 @@ describe('logChanges', () => {
       },
     }
 
-    logChanges(baseEvent, updated)
+    logLiveChanges(baseEvent, updated)
 
     expect(consoleSpy).toHaveBeenCalledWith(
       'Score changed for test-id [CURRENT]: 1:0 → 3:3',
@@ -92,8 +92,24 @@ describe('logChanges', () => {
   })
 
   it('logs nothing if nothing changes', () => {
-    logChanges(baseEvent, { ...baseEvent })
+    logLiveChanges(baseEvent, { ...baseEvent })
 
     expect(consoleSpy).not.toHaveBeenCalled()
+  })
+
+  it('logs REMOVED status change', () => {
+    const event: SportEvent = {
+      ...baseEvent,
+      status: 'LIVE',
+      scores: {
+        CURRENT: { type: 'CURRENT', home: '3', away: '3' },
+      },
+    }
+
+    logRemovedStatusChange(event)
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'Status changed for test-id: LIVE → REMOVED',
+    )
   })
 })

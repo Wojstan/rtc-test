@@ -1,5 +1,5 @@
 import express from 'express'
-import { simulateEvents } from './integration/simulateEvents'
+import { processEvents } from './processing/processEvents'
 import { getEvents } from './store/eventStore'
 
 const app = express()
@@ -15,5 +15,5 @@ app.listen(port, () => {
 })
 
 setInterval(() => {
-  simulateEvents()
+  processEvents()
 }, 1000)

@@ -52,7 +52,7 @@ describe('eventStore', () => {
     }
 
     updateEvent(event.id, event)
-    markAsRemoved(['event2'])
+    markAsRemoved(event)
 
     expect(getEvents().event2).toBeUndefined()
   })

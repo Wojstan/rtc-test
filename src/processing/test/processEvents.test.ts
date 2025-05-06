@@ -3,8 +3,8 @@ import { fetchEventMappings } from '../../api/mappingsClient'
 import { fetchSimulationState } from '../../api/stateClient'
 import { testMappings } from '../../lib/test/__mockDecodeData__'
 import { getEvents } from '../../store/eventStore'
-import { simulateEvents } from '../simulateEvents'
-import { newTestOdd, testOdd, updatedTestOdd } from './__mockSimulateData__'
+import { processEvents } from '../processEvents'
+import { newTestOdd, testOdd, updatedTestOdd } from './__mockProcessData__'
 
 vi.mock('../../api/mappingsClient', () => ({
   fetchEventMappings: vi.fn(),
@@ -14,7 +14,7 @@ vi.mock('../../api/stateClient', () => ({
   fetchSimulationState: vi.fn(),
 }))
 
-describe('simulateEvents', () => {
+describe('processEvents', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
@@ -29,7 +29,7 @@ describe('simulateEvents', () => {
     })
     ;(fetchEventMappings as Mock).mockResolvedValue(testMappings)
 
-    await simulateEvents()
+    await processEvents()
 
     let events = getEvents()
 
@@ -47,7 +47,7 @@ describe('simulateEvents', () => {
     ;(fetchSimulationState as Mock).mockResolvedValue({
       odds: updatedTestOdd,
     })
-    await simulateEvents()
+    await processEvents()
     events = getEvents()
 
     expect(events[eventId].scores).toStrictEqual({
@@ -85,7 +85,7 @@ describe('simulateEvents', () => {
     ;(fetchSimulationState as Mock).mockResolvedValue({
       odds: newTestOdd,
     })
-    await simulateEvents()
+    await processEvents()
     events = getEvents()
 
     expect(events[eventId]).toBeUndefined()
