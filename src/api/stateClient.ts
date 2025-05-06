@@ -1,4 +1,4 @@
-import { API_URL } from './constants'
+import { API_URL } from './url'
 
 interface EventSimulation {
   odds: string
