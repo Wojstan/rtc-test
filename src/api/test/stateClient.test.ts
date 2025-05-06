@@ -1,18 +1,28 @@
-import { type Mock, describe, expect, it, vi } from 'vitest'
+import { type Mock, beforeEach, describe, expect, it, vi } from 'vitest'
 import { fetchSimulationState } from '../stateClient'
 
 describe('stateClient', () => {
-  it('fetches data from the api', async () => {
-    const simulationState = await fetchSimulationState()
+  global.fetch = Object.assign(vi.fn(), {
+    preconnect: vi.fn(),
+  }) as typeof fetch
 
-    expect(typeof simulationState.odds).toBe('string')
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('gets mocked data', async () => {
+    const mockResponse = {
+      ok: true,
+      json: async () => ({ odds: 'test-odds' }),
+    }
+    ;(fetch as unknown as Mock).mockResolvedValue(mockResponse)
+
+    const result = await fetchSimulationState()
+
+    expect(result).toEqual({ odds: 'test-odds' })
   })
 
   it('throws an error when response is not ok', async () => {
-    global.fetch = Object.assign(vi.fn(), {
-      preconnect: vi.fn(),
-    }) as typeof fetch
-
     const mockResponse = {
       ok: false,
       statusText: 'Internal Server Error',
