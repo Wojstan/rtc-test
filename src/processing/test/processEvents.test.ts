@@ -90,4 +90,18 @@ describe('processEvents', () => {
 
     expect(events[eventId]).toBeUndefined()
   })
+
+  it('logs an error if fetchSimulationState throws', async () => {
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const errorMessage = 'fetch failed'
+    ;(fetchSimulationState as Mock).mockRejectedValue(new Error(errorMessage))
+
+    await processEvents()
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      `[processEvents] Error: ${errorMessage}`,
+    )
+
+    consoleSpy.mockRestore()
+  })
 })
