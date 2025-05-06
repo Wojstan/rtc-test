@@ -35,10 +35,6 @@ export function updateEvent(id: string, updated: SportEvent): void {
   events.set(id, updated)
 }
 
-export function markAsRemoved(missingIds: string[]): void {
-  for (const id of missingIds) {
-    const event = events.get(id)
-
-    if (event) event.status = 'REMOVED'
-  }
+export function markAsRemoved(event: SportEvent): void {
+  event.status = 'REMOVED'
 }

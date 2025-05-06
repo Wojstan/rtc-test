@@ -1,6 +1,10 @@
 import type { SportEvent } from '../store/eventStore'
 
-export function logChanges(prevEvent: SportEvent, event: SportEvent) {
+export function logRemovedStatusChange(event: SportEvent): void {
+  console.log(`Status changed for ${event.id}: ${event.status} → REMOVED`)
+}
+
+export function logLiveChanges(prevEvent: SportEvent, event: SportEvent) {
   logScoreChange(prevEvent, event)
   logStatusChange(prevEvent, event)
 }
