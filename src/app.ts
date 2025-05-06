@@ -3,7 +3,7 @@ import { processEvents } from './processing/processEvents'
 import { getEvents } from './store/eventStore'
 
 const app = express()
-const port = 4442
+const port = 3005
 
 app.get('/client/state', (_req, res) => {
   const events = getEvents()
