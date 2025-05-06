@@ -64,5 +64,7 @@ npm run lint:fix
 
 ## 📡 API
 
+The API will be accessible on port 3005
+
 - **GET `/client/state`**
   Returns the current internal simulation state.
