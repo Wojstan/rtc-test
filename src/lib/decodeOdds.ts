@@ -7,27 +7,36 @@ export function decodeOdds(
 ): Record<string, SportEvent> {
   if (!oddsRaw || !mappingsRaw) return {}
 
-  const eventMap: Record<string, SportEvent> = {}
+  const decodedEvents: Record<string, SportEvent> = {}
   const mappings = parseMappings(mappingsRaw)
-
   const lines = oddsRaw.split('\n')
+
   for (const line of lines) {
     const fields = line.split(',')
 
     if (fields.length !== 8) {
-      throw new Error(
+      console.error(
         `Malformed line: expected 8 fields, got ${fields.length} - "${line}"`,
       )
+      continue
     }
 
-    const event = buildSportEvent(fields, mappings)
-    eventMap[event.id] = event
+    try {
+      const event = buildSportEvent(fields, mappings)
+      decodedEvents[event.id] = event
+    } catch (error) {
+      console.error(
+        `Failed to decode event: ${(error as Error).message} | Line: "${line}"`,
+      )
+    }
   }
 
-  return eventMap
+  return decodedEvents
 }
 
 function buildSportEvent(fields: string[], mappings: Mappings): SportEvent {
+  validateFields(fields, mappings)
+
   const [
     id,
     sportId,
@@ -72,6 +81,7 @@ function decodeScores(
   for (const part of scoreParts) {
     const [periodId, result] = part.split('@')
     const [home, away] = result.split(':')
+
     scores[mappings[periodId]] = {
       type: mappings[periodId],
       home,
@@ -80,4 +90,25 @@ function decodeScores(
   }
 
   return scores
+}
+
+function validateFields(fields: string[], mappings: Mappings): void {
+  const [_id, sportId, competitionId, _startTime, homeId, awayId, statusId] =
+    fields
+
+  const missingKeys = [
+    { key: sportId, label: 'sportId' },
+    { key: competitionId, label: 'competitionId' },
+    { key: homeId, label: 'homeId' },
+    { key: awayId, label: 'awayId' },
+    { key: statusId, label: 'statusId' },
+  ].filter(({ key }) => !mappings[key])
+
+  if (missingKeys.length > 0) {
+    throw new Error(
+      `Missing mappings for: ${missingKeys
+        .map(({ key, label }) => `${label} (${key})`)
+        .join(', ')}`,
+    )
+  }
 }
